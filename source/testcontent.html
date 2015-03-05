@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+	generated in 2.280 seconds
+	55406 bytes batcached for 300 seconds
+-->
+<head>
+<meta charset="UTF-8">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dogmap.jp">
+<meta property="og:url" content="http://dogmap.jp/2011/05/12/vps-security/">
+<meta property="og:title" content="VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定dogmap.jp">
+<meta property="og:image" content="http://ecx.images-amazon.com/images/I/51B46JJ7BYL._SL75_.jpg">
+<meta property="og:description" content="さくらのVPSやら、ServersMan@VPS やらの出現で、やたらと敷居のさがった感のある VPS 。かく言うこのサーバもめ組VPSで運用されてるわけですが、VPSを既存のレンサバ感覚で使ってる人にせめてこれくらいのセキュリティ設定はやっておいたほうが良いよっていうお話です。...">
+<meta property="fb:admins" content="1672909124">
+<meta property="fb:app_id" content="169668753079276">
+<meta name="generator" content="WordPress 4.1.1">
+<meta name="viewport" content="width=device-width">
+<title>VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定 | dogmap.jp</title>
+<link rel="dns-prefetch" href="//s0.wp.com">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="/xmlrpc.php">
+<link rel="prev" title="nginx で ssl 設定をする" href="/2011/05/10/nginx-ssl/">
+<link rel="next" title="jQuery で checkbox が check されてるか調べる" href="/2011/05/13/jquery-checkbox/">
+<link rel="canonical" href="http://dogmap.jp/2011/05/12/vps-security/">
+<link rel="shortlink" href="http://wp.me/p1qLYr-Eg">
+<link rel="https://github.com/WP-API/WP-API" href="/wp-json">
+<link rel="stylesheet" type="text/css" href="/wp-content/cache/head-cleaner/css/e7e30cc53281a526dc4076d38db2cd93.css" media="all">
+<script type="text/javascript" src="/wp-includes/js/jquery/jquery.js?ver=1.11.1"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/536234e1adb951130108bae3bad3c8d4.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/e39a3be4dbb479d93986e35a6cbc82ee.js"></script>
+</head>
+
+<body class="single single-post postid-2496 single-format-standard custom-background-empty">
+<div id="page" class="hfeed site">
+	<header id="masthead" class="site-header" role="banner">
+		<hgroup>
+			<h1 class="site-title"><a href="/" title="dogmap.jp" rel="home">dogmap.jp</a></h1>
+			<h2 class="site-description">独断と偏見の何でもレビュー。since Feb. 27, 2005</h2>
+		</hgroup>
+
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle">メニュー</button>
+			<a class="assistive-text" href="#content" title="コンテンツへ移動">コンテンツへ移動</a>
+			<div class="menu-main-menu-container"><ul id="menu-main-menu" class="nav-menu"><li id="menu-item-2851" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-2851"><a href="/">Home</a></li>
+<li id="menu-item-2852" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2852"><a href="http://memo.dogmap.jp">Memo</a></li>
+<li id="menu-item-2859" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2859"><a href="http://shot.dogmap.jp">Shot</a></li>
+<li id="menu-item-2846" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-2846"><a href="/archives/">Archives</a>
+<ul class="sub-menu">
+	<li id="menu-item-2849" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2849"><a href="/category/genre/computer/wordpress/">WordPress</a></li>
+	<li id="menu-item-2850" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2850"><a href="/category-search/">Category Search</a></li>
+</ul>
+</li>
+<li id="menu-item-2847" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2847"><a href="/about/">About</a></li>
+<li id="menu-item-2848" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2848"><a href="/contact/">Contact</a></li>
+<li id="menu-item-2853" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2853"><a href="https://www.facebook.com/dogmap.jp">Facebook Page</a></li>
+</ul></div>		</nav><!-- #site-navigation -->
+
+			</header><!-- #masthead -->
+
+	<div id="main" class="wrapper">
+	<div id="primary" class="site-content">
+		<div id="content" role="main">
+
+
+
+	<article id="post-2496" class="post-2496 post type-post status-publish format-standard hentry category-71 tag-centos tag-security">
+				<header class="entry-header">
+
+						<h1 class="entry-title">VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定</h1>
+										<div class="comments-link">
+					<a href="/2011/05/12/vps-security/#comments" title="VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定 へのコメント">82件の返信</a>				</div><!-- .comments-link -->
+					</header><!-- .entry-header -->
+
+				<div class="entry-content">
+			<!-- zenback_body_begin -->
+<p><a href="http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3-%E3%83%9E%E3%82%A4%E3%82%B1%E3%83%AB%E3%83%BBD-%E3%83%90%E3%82%A6%E3%82%A2%E3%83%BC/dp/4873111498%3FSubscriptionId%3DAKIAIU4DT5KBIGKR6XJQ%26tag%3Ddogmatismandp-22%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D4873111498" title="Amazon で商品の詳細を確認する"><img src="http://ecx.images-amazon.com/images/I/51B46JJ7BYL._SL75_.jpg" alt="Linuxサーバセキュリティ" align="right" title="Linuxサーバセキュリティ" /></a><a href="http://vps.sakura.ad.jp/" title="VPS（仮想専用サーバ）のさくらインターネット">さくらのVPS</a>やら、<a href="http://dream.jp/vps/" title="ServersMan@VPS｜仮想専用サーバ｜月額490円〜、初期＆2ヶ月完全無料">ServersMan@VPS</a> やらの出現で、やたらと敷居のさがった感のある VPS 。<br />
+かく言うこのサーバも<a href="http://www.megumi-server.net/" title="め組サーバ｜WordPress サーバ｜ホスティング">め組VPS</a>で運用されてるわけですが、VPSを既存のレンサバ感覚で使ってる人にせめてこれくらいのセキュリティ設定はやっておいたほうが良いよっていうお話です。<br />
+<br />
+今回、対象にする OS は CentOS です。<br />
+さくらVPS 借りて Ubuntu とか、別の OS で運用するような中上級者は自分でできるよね。<br clear="all" />
+<span id="more-2496"></span></p>
+<h3>リモートからの root ログインを無効にする</h3>
+<p>ssh 経由で root でログインして作業したりしてませんか？<br />
+これ root パスワードが破られたら、サーバが乗っ取られちゃうので、大変に危険です。<br />
+root ログインを無効にして、権限のあるユーザでログインしてから sudo or su して作業するようにしましょう。<br />
+root ログインを無効にする方法は、こんな感じ。</p>
+<p>まずは ssh でログインして作業するためのユーザを作成。</p>
+<pre class="brush: plain; auto-links: false;"># useradd hogehoge
+# passwd hogehoge
+Changing password for user hogehoge
+New UNIX password:
+Retype new UNIX password:
+passwd: all authentication tokens updated successfully.</pre>
+<p>続いて、いま作ったユーザが root になれるように wheel グループに追加。</p>
+<pre class="brush: plain; auto-links: false;"># usermod -G wheel hogehoge</pre>
+<p>root になれるユーザを wheel グループのみに限定。</p>
+<pre class="brush: plain; auto-links: false;"># /usr/local/sbin/visudo
+ :
+## Allow root to run any commands anywhere
+root    ALL=(ALL)       ALL
+
+## Allows members of the 'sys' group to run networking, software,
+## service management apps and more.
+# %sys ALL = NETWORKING, SOFTWARE, SERVICES, STORAGE, DELEGATING, PROCESSES, LOCATE, DRIVERS
+
+## Allows people in group wheel to run all commands
+%wheel  ALL=(ALL)       ALL   ← 行頭の # を消す。
+
+## Same thing without a password
+# %wheel        ALL=(ALL)       NOPASSWD: ALL
+ :</pre>
+<p>root でのログインを禁止。</p>
+<pre class="brush: plain; auto-links: false;"># vi /etc/ssh/sshd_config
+PermitRootLogin yes
+　　↓　以下のように変更
+PermitRootLogin no</pre>
+<p>sshd を再起動。</p>
+<pre class="brush: plain; auto-links: false;"># service sshd restart
+Stopping sshd: [  OK  ]
+Starting sshd: [  OK  ]</pre>
+<p>これで ssh から root でログインできなくなってるはずです。<br />
+他の ssh 接続を起動してみて確かめてみてください。<br />
+また、作業中に作ったユーザでログインし、sudo できるかどうかも確認したほうが良いです。</p>
+<p><cite>via. <a href="http://www.iex3.info/archives/1008" title="【さくらのVPS】初期設定をしてみた | Untitled Documents.">【さくらのVPS】初期設定をしてみた | Untitled Documents.</a></cite></p>
+<h3>パスワードでのログインをやめて公開鍵認証にする</h3>
+<p>次は、リモートからのパスワードでのログインを廃止して、よりセキュアな公開鍵認証でのログインオンリーに設定してしまいましょう。</p>
+<p>Win な人なら PuTTY とかで、公開鍵・秘密鍵が作れます。<br />
+Linux な人や、Mac な人は ssh-keygen で RSA キーを生成しましょう。<br />
+生成された公開鍵は、サーバに ~/.ssh フォルダを作成して保存しておきます。<br />
+この際、~/.ssh フォルダのパーミッションは 700 にしておいてください。<br />
+保存した公開鍵 ~/.ssh/authorized_keys のパーミションは 600 にしておきましょう。</p>
+<p>後は sshd_config を修正して</p>
+<pre class="brush: plain; auto-links: false;"># vi /etc/ssh/sshd_config
+#PubkeyAuthentication yes
+　　↓　行頭の "#" を消して、公開鍵認証でログインできるように設定
+PubkeyAuthentication yes
+
+#PasswordAuthentication yes
+　　↓　以下のように書き換えて、パスワードログインを禁止
+PasswordAuthentication no</pre>
+<p>後は sshd を再起動すれば、公開鍵認証でのみログインできるようになってるはずです。</p>
+<p><cite>via. <a href="http://musilog.net/webdesign/my-works/sakura-vps-web-instal.php" title="さくらのVPS：Web立ち上げまでの設定メモ（下書きレベル） – [Mu]ムジログ">さくらのVPS：Web立ち上げまでの設定メモ（下書きレベル） – [Mu]ムジログ</a></cite></p>
+<h3>log 監視</h3>
+<p>まずは、毎日の運用ログを監視しましょう。<br />
+一日一回、各種ログをキレイに整形してメールで送ってくれる logwatch を利用するのがオススメです。</p>
+<p>インストールは yum で一発。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo yum install logwatch</pre>
+<p>インストールできたら、ちゃんと動くか確認してみましょう。<br />
+&#8211;print オプションをつけると、メールが送られずにコンソールに結果が表示されます。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo /usr/sbin/logwatch --print</pre>
+<p>設定ファイルは /etc/logwatch/conf/logwatch.conf です。<br />
+中を見てみると<br />
+<code># Local configuration options go here (defaults are in /usr/share/logwatch/default.conf/logwatch.conf)</code><br />
+とだけ書かれてますね。<br />
+デフォルト設定と違う設定にしたい場合は、このファイルに書いていってください。<br />
+デフォルトだと root 宛てにメールを送る設定になってるので以下のような行を追加して、メールのあて先を変更してやってください。</p>
+<pre class="brush: plain; auto-links: false;">MailTo = hoge@example.com</pre>
+<p># hoge@example.com は、自分のメールアドレスに変えておいてください。</p>
+<p>さらに詳細な設定は、<a href="http://landisk.kororo.jp/diary/29_logwatch.php" title="第29回 「logwatch によるログの収集」">第29回 「logwatch によるログの収集」</a> とかを参考にすると良いと思うよ。</p>
+<h3>ssh のポート変更</h3>
+<p>logwatch からのレポートを見ると、以下のようなログが残っているかもしれません。</p>
+<pre class="brush: plain; auto-links: false;"> --------------------- pam_unix Begin ------------------------
+ sshd:
+   Authentication Failures:
+      unknown (218.2.129.xx): 1999 Time(s)
+      unknown (211.141.121.xx): 800 Time(s)
+      root (218.2.129.xx): 544 Time(s)
+      root (121.88.249.xx): 67 Time(s)
+      root (202.119.208.xx): 17 Time(s)
+      unknown (121.88.249.xx): 11 Time(s)
+       :
+</pre>
+<p>これは既知の ssh ポートであるポート22を変更していなかったため、そこに対してどこかの人がアタックしているというログです。</p>
+<p>手っ取り早い対策としては ssh のポート番号を変えてしまうことです。<br />
+これだけで ssh ポートへのアタックは減るはずです。<br />
+# っつうか、私の所では無くなりました。</p>
+<pre class="brush: plain; auto-links: false;"># vi /etc/ssh/sshd_config
+#Port 22
+　　↓　以下のように変更することで ssh 接続する時は 10022 番ポートへのアクセスが必要になる
+Port 10022</pre>
+<p>もちろん、この番号は WELL KNOWN PORT NUMBERS の 0 〜 1023 番以外なら自由に割り振れます。</p>
+<p>後は sshd を再起動すれば、新しく変更したポート番号に対して ssh 接続できるようになります。</p>
+<h3>denyhosts のインストール</h3>
+<p>ssh のポート番号を変更したくないんだけどなーという人は denyhosts の導入を検討してください。<br />
+もちろん、ポート番号を変更した人でも denyhosts は有効なので導入を検討してみましょう。<br />
+これは、定期的に log を監視して、接続失敗している ip アドレスを自動的に /etc/hosts.deny に登録してくれるものです。<br />
+インストール方法は、こんな感じ。</p>
+<p>yum リポジトリとして epel が登録されてない場合は、まず epel を登録。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo rpm --import http://download.fedora.redhat.com/pub/epel/RPM-GPG-KEY-EPEL
+$ sudo rpm -ivh http://download.fedora.redhat.com/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm</pre>
+<p>続いて yum で denyhosts をインストール。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo yum -y install denyhosts</pre>
+<p>denyhosts を起動し、自動起動の設定を行う</p>
+<pre class="brush: plain; auto-links: false;">$ sudo /etc/init.d/denyhosts start
+$ sudo /sbin/chkconfig denyhosts on</pre>
+<p>例外的に必ずアクセスを許可しておきたい IP アドレスが有る場合は <code>/var/lib/denyhosts/allowed-hosts</code> に記述しておいてください。<br />
+denyhosts が正常に動作している場合は、不正アクセスがあった場合 <code>/etc/hosts.deny</code> に記録されていくはずです。</p>
+<p><cite>via. <a href="http://epidemic.jp/2010/09/25/denyhosts-on-sakura-vps/" title="さくらのVPSで絶対最初に入れてほしいセキュリティソフト | epidemic.jp">さくらのVPSで絶対最初に入れてほしいセキュリティソフト | epidemic.jp</a></cite></p>
+<h3>iptables の設定</h3>
+<p>後は iptables を設定して、不要なポートへのアクセスは停止しておきましょう。</p>
+<p>さくらVPSでは iptables は、初期設定ではインストール済みです。<br />
+もし、インストールされてないようでしたら yum でインストールしましょう。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo yum install iptables</pre>
+<p>Web サーバとして運用するなら、SSH、HTTP、FTP、HTTPS 辺りを空けておきましょう。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo vi /etc/sysconfig/iptables
+*filter
+:INPUT   ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT  ACCEPT [0:0]
+:RH-Firewall-1-INPUT - [0:0]
+
+-A INPUT -j RH-Firewall-1-INPUT
+-A FORWARD -j RH-Firewall-1-INPUT
+-A RH-Firewall-1-INPUT -i lo -j ACCEPT
+-A RH-Firewall-1-INPUT -p icmp --icmp-type any -j ACCEPT
+-A RH-Firewall-1-INPUT -p 50 -j ACCEPT
+-A RH-Firewall-1-INPUT -p 51 -j ACCEPT
+-A RH-Firewall-1-INPUT -p udp --dport 5353 -d 224.0.0.251 -j ACCEPT
+-A RH-Firewall-1-INPUT -p udp -m udp --dport 631 -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp -m tcp --dport 631 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# HTTP, FTP1, FTP2, SSH
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 80    -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 20    -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 21    -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 22    -j ACCEPT
+
+-A RH-Firewall-1-INPUT -j REJECT --reject-with icmp-host-prohibited
+
+COMMIT</pre>
+<p># SSH のポート番号を22番から変更している場合は23行目の変更を忘れずに！</p>
+<p>あとは iptables を再起動すれば、設定が適用されます。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo /etc/rc.d/init.d/iptables restart</pre>
+<p>設定がちゃんと反映されているかを確認するには、以下のようにしてください。</p>
+<pre class="brush: plain; auto-links: false;">$ sudo iptables -L</pre>
+<p><cite>via. <a href="http://akabeko.sakura.ne.jp/blog/2010/09/%E3%81%95%E3%81%8F%E3%82%89%E3%81%AEvps-%E3%82%92%E4%BD%BF%E3%81%84%E3%81%AF%E3%81%98%E3%82%81%E3%82%8B-3/" title="さくらのVPS を使いはじめる 3 – iptables を設定する | アカベコマイリ">さくらのVPS を使いはじめる 3 – iptables を設定する | アカベコマイリ</a></cite></p>
+<p>とりあえず CentOS でのセキュリティ設定の基本でした。<br />
+特に忘れがちなのはログ監視です。これは、やっておいたほうが良いよ。</p>
+<p>あとは Apache や PHP, MySQL など、サーバ上で動作しているサービスはできるだけ最新版にアップデートしてあげることも必要です。<br />
+セキュリティパッチが出た時は、早めに対応しましょう。</p>
+<p>サーバのセキュリティ対策は、導入直後だけでなく、日々の運用も大事です。<br />
+ログを監視したり、セキュリティパッチが出てないか情報収集したり<span style="font-family: 'ＭＳ Ｐゴシック'">&#8230;</span><br />
+それがメンドクサイ場合は VPS なんか借りずに、その辺をすべて面倒見てくれるレンサバを借りたほうが良いと思うよ。</p>
+<div id="wpjr">
+<h3>このブログで関連すると思われる他の投稿</h3>
+<ul id="wpjrelated">
+<li><a href="/2011/07/07/nginx-lsyncd-wordpress-loadbalancer/">Nginx + lsyncd で WordPress を負荷分散させる</a></li>
+<li><a href="/2013/12/20/monit/">Monit でプロセス監視 ( WordPress Advent Calendar 2013 全部オレ 20日目 )</a></li>
+<li><a href="/2011/12/13/amazon-ec2-micro-instance/">Amazon EC2 マイクロインスタンスに移行</a></li>
+<li><a href="/2013/01/15/wordpress-migration/">WordPress の引っ越し方法色々</a></li>
+<li><a href="/2012/04/20/high-performance-wordpress-2/">WordPress 高速化＆スマート運用必携ガイド フォロー</a></li>
+</ul>
+<div class="yahoologo">
+<!-- Begin Yahoo! JAPAN Web Services Attribution Snippet -->
+<a href="http://developer.yahoo.co.jp/about"><img src="http://i.yimg.jp/images/yjdn/yjdn_attbtn1_125_17.gif" title="Webサービス by Yahoo! JAPAN" alt="Web Services by Yahoo! JAPAN" width="125" height="17" border="0" /></a>
+<!-- End Yahoo! JAPAN Web Services Attribution Snippet -->
+</div>
+</div>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-official sd-sharing"><h3 class="sd-title">共有:</h3><div class="sd-content"><ul><li class="share-twitter"><div class="twitter_button"><iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.html?url=http%3A%2F%2Fdogmap.jp%2F2011%2F05%2F12%2Fvps-security%2F&#038;counturl=http%3A%2F%2Fdogmap.jp%2F2011%2F05%2F12%2Fvps-security%2F&#038;count=horizontal&#038;text=VPS%20%E5%80%9F%E3%82%8A%E3%81%9F%E3%82%89%E3%80%81%E3%81%9B%E3%82%81%E3%81%A6%E3%81%93%E3%82%8C%E3%81%8F%E3%82%89%E3%81%84%E3%81%AF%E3%82%84%E3%81%A3%E3%81%A8%E3%81%91%E3%81%A8%E3%81%84%E3%81%86%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E8%A8%AD%E5%AE%9A%3A" style="width:101px; height:20px;"></iframe></div></li><li class="share-facebook"><div class="like_button"><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fdogmap.jp%2F2011%2F05%2F12%2Fvps-security%2F&amp;layout=button_count&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=21&amp;locale=ja_JP&amp;width=100" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:106px; height:21px;" allowTransparency="true"></iframe></div></li><li class="share-google-plus-1"><div class="googleplus1_button"><div class="g-plus" data-action="share" data-annotation="bubble" data-href="http://dogmap.jp/2011/05/12/vps-security/"></div></div></li><li class="share-pocket"><div class="pocket_button"><a href="https://getpocket.com/save" class="pocket-btn" data-lang="en" data-save-url="http://dogmap.jp/2011/05/12/vps-security/" data-pocket-count="horizontal" >Pocket</a></div></li><li class="share-end"></li></ul></div></div></div><!-- zenback_body_end -->
+<!-- zenback_date 2011-05-12 -->
+					</div><!-- .entry-content -->
+
+		<footer class="entry-meta">
+			カテゴリー: <a href="/category/miscellany/%E3%82%B5%E3%82%A4%E3%83%88%E9%81%8B%E5%96%B6/" rel="category tag">サイト運営</a> | タグ: <a href="/tag/centos/" rel="tag">CentOS</a>, <a href="/tag/security/" rel="tag">security</a> | 投稿日: <a href="/2011/05/12/vps-security/" title="3:03 PM" rel="bookmark"><time class="entry-date" datetime="2011-05-12T15:03:39+00:00">2011年5月12日</time></a> | <span class="by-author">投稿者: <span class="author vcard"><a class="url fn n" href="/author/wokamoto/" title="をかもと の投稿をすべて表示" rel="author">をかもと</a></span></span>								</footer><!-- .entry-meta -->
+	</article><!-- #post -->
+
+				<nav class="nav-single">
+					<h3 class="assistive-text">投稿ナビゲーション</h3>
+					<span class="nav-previous"><a href="/2011/05/10/nginx-ssl/" rel="prev"><span class="meta-nav">&larr;</span> nginx で ssl 設定をする</a></span>
+					<span class="nav-next"><a href="/2011/05/13/jquery-checkbox/" rel="next">jQuery で checkbox が check されてるか調べる <span class="meta-nav">&rarr;</span></a></span>
+				</nav><!-- .nav-single -->
+
+
+<div id="comments" class="comments-area">
+
+
+			<h2 class="comments-title">
+			「<span>VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定</span>」への82件のフィードバック		</h2>
+
+		<ol class="commentlist">
+				<li class="comment even thread-even depth-1 hatena" id="li-comment-hatena-2">
+		<article id="comment-hatena-2" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt='' src='http://www.hatena.ne.jp/users/ta/tada0121/profile.gif' class='avatar avatar-44 photo' height='44' width='44' /><cite><b class="fn"><a href='http://b.hatena.ne.jp/entry/dogmap.jp/2011/05/12/vps-security/' rel='external nofollow' class='url'>tada0121</a>&nbsp;<span class="commenters-info"><img src="/wp-content/plugins/commenters-info/images/browsers/hatena_bookmark.png" alt="hatena bookmark" title="hatena bookmark" style="width:16px;height:16px;" /></span></b> </cite><a href="/2011/05/12/vps-security/comment-page-4/#comment-hatena-2"><time datetime="2014-09-10T22:54:24+00:00">2014年9月10日 10:54 PM</time></a>			</header><!-- .comment-meta -->
+
+
+			<section class="comment-content comment">
+				<p>“service sshd restart”</p>
+							</section><!-- .comment-content -->
+
+			<div class="reply">
+							</div><!-- .reply -->
+		</article><!-- #comment-## -->
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 hatena" id="li-comment-hatena-3">
+		<article id="comment-hatena-3" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt='' src='http://www.hatena.ne.jp/users/ao/aokirozin/profile.gif' class='avatar avatar-44 photo' height='44' width='44' /><cite><b class="fn"><a href='http://b.hatena.ne.jp/entry/dogmap.jp/2011/05/12/vps-security/' rel='external nofollow' class='url'>aokirozin</a>&nbsp;<span class="commenters-info"><img src="/wp-content/plugins/commenters-info/images/browsers/hatena_bookmark.png" alt="hatena bookmark" title="hatena bookmark" style="width:16px;height:16px;" /></span></b> </cite><a href="/2011/05/12/vps-security/comment-page-4/#comment-hatena-3"><time datetime="2013-12-03T00:53:57+00:00">2013年12月3日 12:53 AM</time></a>			</header><!-- .comment-meta -->
+
+
+			<section class="comment-content comment">
+				<p>&quot;これ root パスワードが破られたら、サーバが乗っ取られちゃうので、大変に危険です&quot;</p>
+							</section><!-- .comment-content -->
+
+			<div class="reply">
+							</div><!-- .reply -->
+		</article><!-- #comment-## -->
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 hatena" id="li-comment-hatena-4">
+		<article id="comment-hatena-4" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt='' src='http://www.hatena.ne.jp/users/m_/m_shige1979/profile.gif' class='avatar avatar-44 photo' height='44' width='44' /><cite><b class="fn"><a href='http://b.hatena.ne.jp/entry/dogmap.jp/2011/05/12/vps-security/' rel='external nofollow' class='url'>m_shige1979</a>&nbsp;<span class="commenters-info"><img src="/wp-content/plugins/commenters-info/images/browsers/hatena_bookmark.png" alt="hatena bookmark" title="hatena bookmark" style="width:16px;height:16px;" /></span></b> </cite><a href="/2011/05/12/vps-security/comment-page-4/#comment-hatena-4"><time datetime="2013-08-29T10:24:29+00:00">2013年8月29日 10:24 AM</time></a>			</header><!-- .comment-meta -->
+
+
+			<section class="comment-content comment">
+				<p>ログ監視はしてなかったのでやっておこう</p>
+							</section><!-- .comment-content -->
+
+			<div class="reply">
+							</div><!-- .reply -->
+		</article><!-- #comment-## -->
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 tweet" id="li-comment-tweet-337817468598882304">
+		<article id="comment-tweet-337817468598882304" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt='' src='http://a0.twimg.com/profile_images/3703117690/f0efac2767a70d46f47338a39c9b3b3e_normal.jpeg' class='avatar avatar-44 photo' height='44' width='44' /><cite><b class="fn"><a href='https://twitter.com/schwarzewald/status/337817468598882304' rel='external nofollow' class='url'>古道京紗(コドウキョウサ)</a>&nbsp;<span class="commenters-info"><img src="/wp-content/plugins/commenters-info/images/browsers/tweet.png" alt="twitter" title="twitter" style="width:16px;height:16px;" /></span></b> </cite><a href="/2011/05/12/vps-security/comment-page-4/#comment-tweet-337817468598882304"><time datetime="2013-05-24T15:28:55+00:00">2013年5月24日 3:28 PM</time></a>			</header><!-- .comment-meta -->
+
+
+			<section class="comment-content comment">
+				<p>denyhostのインストールやってなかったので / “VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定 : dogmap.jp” <a href="http://t.co/UT4MNeNVFV" rel="nofollow">http://t.co/UT4MNeNVFV</a></p>
+							</section><!-- .comment-content -->
+
+			<div class="reply">
+							</div><!-- .reply -->
+		</article><!-- #comment-## -->
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 hatena" id="li-comment-hatena-5">
+		<article id="comment-hatena-5" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt='' src='http://www.hatena.ne.jp/users/sc/schwarzewald/profile.gif' class='avatar avatar-44 photo' height='44' width='44' /><cite><b class="fn"><a href='http://b.hatena.ne.jp/entry/dogmap.jp/2011/05/12/vps-security/' rel='external nofollow' class='url'>schwarzewald</a>&nbsp;<span class="commenters-info"><img src="/wp-content/plugins/commenters-info/images/browsers/hatena_bookmark.png" alt="hatena bookmark" title="hatena bookmark" style="width:16px;height:16px;" /></span></b> </cite><a href="/2011/05/12/vps-security/comment-page-4/#comment-hatena-5"><time datetime="2013-05-24T15:28:54+00:00">2013年5月24日 3:28 PM</time></a>			</header><!-- .comment-meta -->
+
+
+			<section class="comment-content comment">
+				<p>denyhostのインストールやってなかったので</p>
+							</section><!-- .comment-content -->
+
+			<div class="reply">
+							</div><!-- .reply -->
+		</article><!-- #comment-## -->
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 tweet" id="li-comment-tweet-335963123255234562">
+		<article id="comment-tweet-335963123255234562" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt='' src='http://a0.twimg.com/profile_images/1817739788/1290319914_MobileMe-Black_normal.png' class='avatar avatar-44 photo' height='44' width='44' /><cite><b class="fn"><a href='https://twitter.com/snicker_jp/status/335963123255234562' rel='external nofollow' class='url'>snicker_jp</a>&nbsp;<span class="commenters-info"><img src="/wp-content/plugins/commenters-info/images/browsers/tweet.png" alt="twitter" title="twitter" style="width:16px;height:16px;" /></span></b> </cite><a href="/2011/05/12/vps-security/comment-page-4/#comment-tweet-335963123255234562"><time datetime="2013-05-19T12:40:25+00:00">2013年5月19日 12:40 PM</time></a>			</header><!-- .comment-meta -->
+
+
+			<section class="comment-content comment">
+				<p>denyhostsは知りませんでした。φ(..)メモメモ</p>
+<p>VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定: <a href="http://t.co/rHWHEM35Vd" rel="nofollow">http://t.co/rHWHEM35Vd</a></p>
+							</section><!-- .comment-content -->
+
+			<div class="reply">
+							</div><!-- .reply -->
+		</article><!-- #comment-## -->
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 tweet" id="li-comment-tweet-321688184624934912">
+		<article id="comment-tweet-321688184624934912" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt='' src='http://a0.twimg.com/profile_images/3405371167/863c9f391d94174aa301231406e9f066_normal.png' class='avatar avatar-44 photo' height='44' width='44' /><cite><b class="fn"><a href='https://twitter.com/sters9/status/321688184624934912' rel='external nofollow' class='url'>ごみばこ｜すてるす</a>&nbsp;<span class="commenters-info"><img src="/wp-content/plugins/commenters-info/images/browsers/tweet.png" alt="twitter" title="twitter" style="width:16px;height:16px;" /></span></b> </cite><a href="/2011/05/12/vps-security/comment-page-4/#comment-tweet-321688184624934912"><time datetime="2013-04-10T03:16:54+00:00">2013年4月10日 3:16 AM</time></a>			</header><!-- .comment-meta -->
+
+
+			<section class="comment-content comment">
+				<p>NowBrowsing: VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定 | dogmap.jp <a href="http://t.co/32ecTK8DEm" rel="nofollow">http://t.co/32ecTK8DEm</a></p>
+							</section><!-- .comment-content -->
+
+			<div class="reply">
+							</div><!-- .reply -->
+		</article><!-- #comment-## -->
+	</li><!-- #comment-## -->
+		</ol><!-- .commentlist -->
+
+				<nav id="comment-nav-below" class="navigation" role="navigation">
+			<h1 class="assistive-text section-heading">コメントナビゲーション</h1>
+			<div class="nav-previous"><a href="/2011/05/12/vps-security/comment-page-3/#comments" >&larr; 過去のコメント</a></div>
+			<div class="nav-next"></div>
+		</nav>
+
+
+
+									<div id="respond" class="comment-respond">
+				<h3 id="reply-title" class="comment-reply-title">コメントを残す <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/05/12/vps-security/#respond" style="display:none;">コメントをキャンセル</a></small></h3>
+									<form action="/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+																			<p class="comment-notes"><span id="email-notes">メールアドレスが公開されることはありません。</span></p>							<p class="comment-form-author"><label for="author">名前</label> <input id="author" name="author" type="text" value="" size="30" /></p>
+<p class="comment-form-email"><label for="email">メールアドレス</label> <input id="email" name="email" type="text" value="" size="30" aria-describedby="email-notes" /></p>
+<p class="comment-form-url"><label for="url">ウェブサイト</label> <input id="url" name="url" type="text" value="" size="30" /></p>
+												<p class="comment-form-comment"><label for="comment">コメント</label> <textarea id="comment" name="comment" cols="45" rows="8" aria-describedby="form-allowed-tags" aria-required="true"></textarea></p>						<p class="form-allowed-tags" id="form-allowed-tags">次の<abbr title="HyperText Markup Language">HTML</abbr> タグと属性が使えます:  <code>&lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </code></p>						<p class="form-submit">
+							<input name="submit" type="submit" id="submit" class="submit" value="コメントを送信" />
+							<input type='hidden' name='comment_post_ID' value='2496' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+						</p>
+						<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="8699ec9589" /></p><input type="hidden" id="_wpnonce" name="_wpnonce" value="76a9f84462" /><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="180"/></p>					</form>
+							</div><!-- #respond -->
+
+</div><!-- #comments .comments-area -->
+
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+
+			<div id="secondary" class="widget-area" role="complementary">
+			<aside id="search-3" class="widget widget_search"><form role="search" method="get" id="searchform" class="searchform" action="/">
+				<div>
+					<label class="screen-reader-text" for="s">検索:</label>
+					<input type="text" value="" name="s" id="s" />
+					<input type="submit" id="searchsubmit" value="検索" />
+				</div>
+			</form></aside><aside id="text-9" class="widget widget_text">			<div class="textwidget"><p>複数の投稿者が、映画・マンガ・小説・音楽・ゲーム等の感想を新旧問わずに書きなぐっています。詳細は<a href="/about/">こちら</a></p>
+<p style="margin-top:1em;">コメント・ＴＢは大歓迎です。お気軽にどうぞ。ただし、アダルト・商業系・投稿記事と関係のないものは断り無く削除させていただくことがあります。</p>
+
+<!--
+<p>寄付は、いつでも受け付けております。
+「プラグイン or エントリが役に立ったぜひ寄付をしたい！」という奇特な方はぜひ、<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=9S8AJCY7XB8F4&amp;lc=JP&amp;item_name=WordPress%20Plugins&amp;item_number=wp%2dplugins&amp;currency_code=JPY&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="PayPalでスピーディに寄付をしてください - PayPal">PayPal 経由で寄付をしてください</a>。</p>
+--></div>
+		</aside><aside id="text-11" class="widget widget_text">			<div class="textwidget"><p><img src="/wp-content/uploads/2014/07/2014-07-22-12.01.44-200x150.jpg" alt="" width="200" height="150" title="WordPress プラグイン開発のバイブル" border="0" /><br>
+<a href="http://firegoby.jp/" title="firegoby | WordPress Plugins &amp; Tips">
+宮さん</a>、<a href="http://nskw-style.com/" title="Shinichi Nishikawa's | How I work, make, study and live.">西川さん</a>、<a href="http://ideasilo.wordpress.com/" title="iDeasilo | Just another WordPress.com weblog">三好さん</a>達と一緒に本書きました。
+2014.7.22発売<br>
+<a href="http://www.amazon.co.jp/dp/4797373520/ref=as_sl_pd_tf_lc?tag=dogmatismandp-22&amp;creativeASIN=4797373520&amp;adid=19K5SES339VXXZH81V6M&amp;ref-refURL=http%3A%2F%2Fdogmap.jp%2F" title="サイトの拡張性を飛躍的に高める WordPressプラグイン開発のバイブル">WordPressプラグイン開発のバイブル</a>
+</p>
+
+<p><a href="http://blog.gaspanik.com/" title="gaspanik weblog">こもりさん</a>と一緒に本書きました。 2012.3.16 発売。<br>
+<a href="http://www.amazon.co.jp/WordPress-%E9%AB%98%E9%80%9F%E5%8C%96%EF%BC%86%E3%82%B9%E3%83%9E%E3%83%BC%E3%83%88%E9%81%8B%E7%94%A8%E5%BF%85%E6%90%BA%E3%82%AC%E3%82%A4%E3%83%89-%E3%81%93%E3%82%82%E3%82%8A%E3%81%BE%E3%81%95%E3%81%82%E3%81%8D/dp/4844362526%3FSubscriptionId%3DAKIAIU4DT5KBIGKR6XJQ%26tag%3Ddogmatismandp-22%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D4844362526" title="Amazon で商品の詳細を確認する">WordPress 高速化＆スマート運用必携ガイド</a><br clear="all" /></p></div>
+		</aside><aside id="text-12" class="widget widget_text">			<div class="textwidget"><p>
+サイト管理者への連絡は以下のアドレスにお願いします。<br />
+<img src="/wp-content/themes/dogmap2/images/gmail_banner_dogmap.png" alt="Gmail Banner" width="149" height="21" style="display:block;margin:5px auto;" />
+もしくは <a href="/contact/">contact</a> から
+</p>
+
+<!--
+<p><a href="http://technorati.jp/claim/3r4whq7iw7" rel="me">テクノラティプロフィール</a></p>
+<p><a href="http://www.technorati.jp/faves?sub=addfavbtn&amp;add=http://dogmap.jp"><img src="http://static.technorati.jp/pix/fave/tech-fav-1.png" alt="テクノラティお気に入りに追加する" style="border:none;" width="145px" height="25px" /></a></p>
+
+<p><a href="http://sites.google.com/site/quake20110311jp/bokin"><img src="/2011/03/fund_raising_210_105.png" width="210px" height="105px" alt="東北地方太平洋沖地震 義援金" /></a></p>
+
+<p><a href="/feed/" rel="alternate" type="application/rss+xml"><img src="/images/icons/icon-feed.png" alt="rss icon" style="vertical-align:middle;border:0;margin-right:0.25em" width="16px" height="16px" />RSSリーダーで購読する</a></p>
+--></div>
+		</aside><aside id="text-13" class="widget widget_text">			<div class="textwidget"><p>
+<a href="http://ja.wpbooster.net/" title="WP Booster - WordPressが驚くほど高速に生まれ変わります。"><img src="http://wokamoto.files.wordpress.com/2012/08/wpbooster.png" alt="WP Booster - WordPressが驚くほど高速に生まれ変わります。" title="WP Booster - WordPressが驚くほど高速に生まれ変わります。" width="230" height="80" class="size-full" style="display:block;margin:10px auto;" /></a>
+
+<a href="http://ja.megumi-cloud.com/"><img src="http://wokamoto.files.wordpress.com/2012/08/megumi-cloud.png" alt="WordPress AMI - 超高速 WordPress AMI 網元" title="WordPress AMI - 超高速 WordPress AMI 網元" width="230" height="80" class="size-full" style="display:block;margin:10px auto;" /></a>
+
+<!--
+<a href="http://niigm.com/about" title="新潟グラム"><img src="http://wokamoto.files.wordpress.com/2011/07/bnr08.gif" alt="新潟グラム" title="新潟グラム" width="220" height="65" class="size-full " style="display:block;margin:10px auto 0;" /></a>
+-->
+</p></div>
+		</aside><aside id="text-10" class="widget widget_text">			<div class="textwidget"><iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=dogmatismandp-22&o=9&p=286&l=bn1&mode=books-jp&browse=466298&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="200" height="200" border="0" frameborder="0" style="border:none;margin-left: 20px;" scrolling="no"></iframe>
+</div>
+		</aside><aside id="top-posts-2" class="widget widget_top-posts"><h3 class="widget-title">人気の投稿とページ</h3><ul>				<li>
+										<a href="/2011/05/12/vps-security/" class="bump-view" data-bump-view="tp">
+						VPS 借りたら、せめてこれくらいはやっとけというセキュリティ設定					</a>
+									</li>
+							<li>
+										<a href="/2013/06/07/staticpress/" class="bump-view" data-bump-view="tp">
+						WordPress サイトを静的 HTML に変換するプラグイン StaticPress					</a>
+									</li>
+							<li>
+										<a href="/2009/09/10/%E6%95%B0%E7%8B%AC%E8%87%AA%E5%8B%95%E8%A7%A3%E6%B3%95%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0/" class="bump-view" data-bump-view="tp">
+						数独自動解法プログラム					</a>
+									</li>
+							<li>
+										<a href="/2010/04/20/wordpress-htaccess/" class="bump-view" data-bump-view="tp">
+						WordPressサイト用の.htaccess例					</a>
+									</li>
+							<li>
+										<a href="/2011/05/10/nginx-ssl/" class="bump-view" data-bump-view="tp">
+						nginx で ssl 設定をする					</a>
+									</li>
+							<li>
+										<a href="/2009/06/17/javascript-image-natural-size-2/" class="bump-view" data-bump-view="tp">
+						JavaScript で画像本来のサイズ(幅, 高さ)を取得する					</a>
+									</li>
+							<li>
+										<a href="/2014/03/10/mysqlbinlog/" class="bump-view" data-bump-view="tp">
+						MySQL バイナリログからデータを復旧					</a>
+									</li>
+							<li>
+										<a href="/2013/07/25/call-time-pass-by-reference-has-been-removed/" class="bump-view" data-bump-view="tp">
+						「Fatal error: Call-time pass-by-reference has been removed」の対処					</a>
+									</li>
+							<li>
+										<a href="/2014/03/28/web-maintenance/" class="bump-view" data-bump-view="tp">
+						Web サイトのメンテナンス中画面の出し方					</a>
+									</li>
+							<li>
+										<a href="/2011/11/15/mintty/" class="bump-view" data-bump-view="tp">
+						mintty を使えるようにする					</a>
+									</li>
+			</ul></aside>		<aside id="recent-posts-4" class="widget widget_recent_entries">		<h3 class="widget-title">最近の投稿</h3>		<ul>
+					<li>
+				<a href="/2014/12/18/wp-cli-advent-calendar-2014-day-18/">自作プラグインに追加した wp-cli コマンドの出力結果を整形しよう ( WP-CLI Advent Calendar 2014 18日目 )</a>
+						</li>
+					<li>
+				<a href="/2014/12/11/wp-cli-advent-calendar-2014-day-11/">自作のプラグインに wp-cli コマンドを追加しよう ( WP-CLI Advent Calendar 2014 11日目 )</a>
+						</li>
+					<li>
+				<a href="/2014/12/04/wp-cli-advent-calendar-2014-day-4/">Chef で wp-cli を管理するためのレシピ ( WP-CLI Advent Calendar 2014 4日目 )</a>
+						</li>
+					<li>
+				<a href="/2014/11/19/wordpress-json-rest-api-added-custom-endpoint/">WordPress JSON REST API に独自の endpoint を追加する</a>
+						</li>
+					<li>
+				<a href="/2014/10/10/post-3126/">WordPress プロフェッショナル養成読本</a>
+						</li>
+					<li>
+				<a href="/2014/09/25/bash-specially-crafted-environment-variables-code-injection-attack/">BASHの脆弱性でCGIモードで動いてるPHPにアレさせてみました</a>
+						</li>
+					<li>
+				<a href="/2014/09/10/post-3109/">WordPress プラグインで使う定数値はヘッダ部分で管理して get_file_data() で取得すると良いと思うけど、どんなもんでしょう</a>
+						</li>
+					<li>
+				<a href="/2014/07/23/post-3087/">WordPress プラグイン開発のバイブル</a>
+						</li>
+					<li>
+				<a href="/2014/07/04/t2-micro/">dogmap.jp を t1.micro から t2.micro に変更してみました</a>
+						</li>
+					<li>
+				<a href="/2014/05/20/post-3070/">WordPress でデータ連係するときのスニペット</a>
+						</li>
+				</ul>
+		</aside><aside id="mycategoryorder-5" class="widget widget_mycategoryorder"><h3 class="widget-title">カテゴリー</h3>		<ul>
+			<li class="cat-item cat-item-33"><a href="/category/genre/" >ジャンル別</a>
+<ul class='children'>
+	<li class="cat-item cat-item-22"><a href="/category/genre/cinema/" >映画</a>
+</li>
+	<li class="cat-item cat-item-18"><a href="/category/genre/comics/" >マンガ</a>
+</li>
+	<li class="cat-item cat-item-23"><a href="/category/genre/game/" >ゲーム</a>
+</li>
+	<li class="cat-item cat-item-28"><a href="/category/genre/novels/" >小説</a>
+</li>
+	<li class="cat-item cat-item-107"><a href="/category/genre/teledrama/" >TVドラマ</a>
+</li>
+	<li class="cat-item cat-item-17"><a href="/category/genre/music/" >音楽</a>
+</li>
+	<li class="cat-item cat-item-103"><a href="/category/genre/computer/" >コンピュータ</a>
+	<ul class='children'>
+	<li class="cat-item cat-item-15"><a href="/category/genre/computer/pc/" >PC</a>
+</li>
+	<li class="cat-item cat-item-1816"><a href="/category/genre/computer/oss/" >OSS</a>
+</li>
+	<li class="cat-item cat-item-102"><a href="/category/genre/computer/wordpress/" >WordPress</a>
+</li>
+	<li class="cat-item cat-item-1805"><a href="/category/genre/computer/web-application/" >Webアプリ</a>
+</li>
+	<li class="cat-item cat-item-27"><a href="/category/genre/computer/%E3%82%AA%E3%82%B9%E3%82%B9%E3%83%A1%E3%82%B5%E3%82%A4%E3%83%88/" >オススメサイト</a>
+</li>
+	</ul>
+</li>
+	<li class="cat-item cat-item-34"><a href="/category/genre/gadget/" >gadget</a>
+	<ul class='children'>
+	<li class="cat-item cat-item-26"><a href="/category/genre/gadget/vehicle/" >車</a>
+</li>
+	<li class="cat-item cat-item-29"><a href="/category/genre/gadget/toys/" >玩具</a>
+</li>
+	<li class="cat-item cat-item-82"><a href="/category/genre/gadget/av-devices/" >ＡＶ機器</a>
+</li>
+	<li class="cat-item cat-item-106"><a href="/category/genre/gadget/%E3%81%9D%E3%81%AE%E4%BB%96-2/" >その他</a>
+</li>
+	</ul>
+</li>
+	<li class="cat-item cat-item-104"><a href="/category/genre/indulgence/" >嗜好品</a>
+	<ul class='children'>
+	<li class="cat-item cat-item-20"><a href="/category/genre/indulgence/%EF%BD%82%E7%B4%9A%E3%82%B0%E3%83%AB%E3%83%A1/" >Ｂ級グルメ</a>
+</li>
+	<li class="cat-item cat-item-30"><a href="/category/genre/indulgence/drink/" >酒</a>
+</li>
+	<li class="cat-item cat-item-88"><a href="/category/genre/indulgence/food/" >食</a>
+</li>
+	</ul>
+</li>
+	<li class="cat-item cat-item-8"><a href="/category/genre/%E3%81%9D%E3%81%AE%E4%BB%96/" >その他</a>
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/%E6%AF%94%E8%BC%83%E7%9A%84%E6%96%B0%E4%BD%9C/" >比較的新作</a>
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/%E6%A3%9A%E3%81%8B%E3%82%89%E4%B8%80%E6%8E%B4%E3%81%BF/" >棚から一掴み</a>
+</li>
+	<li class="cat-item cat-item-105"><a href="/category/miscellany/" >雑文</a>
+<ul class='children'>
+	<li class="cat-item cat-item-4"><a href="/category/miscellany/%E8%BA%AB%E8%BE%BA%E9%9B%91%E8%A8%98/" >身辺雑記</a>
+</li>
+	<li class="cat-item cat-item-21"><a href="/category/miscellany/%E6%97%85/" >旅</a>
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/miscellany/%E9%9B%91%E6%83%B3%E3%83%8E%E3%83%BC%E3%83%88/" >雑想ノート</a>
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/miscellany/%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88/" >イラスト</a>
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/miscellany/blog-%E9%96%A2%E9%80%A3/" >blog 関連</a>
+</li>
+	<li class="cat-item cat-item-108"><a href="/category/miscellany/programing/" >プログラミング</a>
+</li>
+	<li class="cat-item cat-item-71"><a href="/category/miscellany/%E3%82%B5%E3%82%A4%E3%83%88%E9%81%8B%E5%96%B6/" >サイト運営</a>
+</li>
+	<li class="cat-item cat-item-37"><a href="/category/miscellany/%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%84/" >スポーツ</a>
+</li>
+	<li class="cat-item cat-item-10"><a href="/category/miscellany/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/" >ニュース</a>
+</li>
+	<li class="cat-item cat-item-87"><a href="/category/miscellany/info/" >お知らせ</a>
+</li>
+</ul>
+</li>
+		</ul>
+		</aside><aside id="linkcat-1854" class="widget widget_links"><h3 class="widget-title">Movies</h3>
+	<ul class='xoxo blogroll'>
+<li><a href="http://blog.goo.ne.jp/hi-chan_2005">Movies!!</a></li>
+<li><a href="http://blog.livedoor.jp/shake24jp/">シェイクで乾杯！</a></li>
+<li><a href="http://latifa.blog10.fc2.com/">ポコアポコヤ　映画倉庫</a></li>
+<li><a href="http://blog.livedoor.jp/cocoroblue/" target="_blank">菫色映画</a></li>
+
+	</ul>
+</aside>
+<aside id="linkcat-102" class="widget widget_links"><h3 class="widget-title">WordPress</h3>
+	<ul class='xoxo blogroll'>
+<li><a href="http://8bitodyssey.com/">8bit Odyssey</a></li>
+<li><a href="http://plasticdreams.org/">:: plasticdreams ::</a></li>
+<li><a href="http://fish1091.com/wordpress/">Binsan&#039;s Cafe</a></li>
+<li><a href="http://www.eternal-tears.com/">Eternal-Tears.com</a></li>
+<li><a href="http://firegoby.theta.ne.jp/" target="_blank">firegoby</a></li>
+<li><a href="http://another.maple4ever.net/">hiromasa.another :o)</a></li>
+<li><a href="http://love-satchin.org/">Love!?</a></li>
+<li><a href="http://www.pi-kun.com/">M&#039;s Life 2</a></li>
+<li><a href="http://wp.mmrt-jp.net/">MMRT daily life</a></li>
+<li><a href="http://wp.graphact.com/" title="Numb.">Numb.</a></li>
+<li><a href="http://www.orioa.com/">orioa</a></li>
+<li><a href="http://www.warna.info/" rel="acquaintance met">Simple Colors</a></li>
+<li><a href="http://wpxtreme.jp/">wpxtreme</a></li>
+<li><a href="http://www.yuriko.net/">Yuriko.Net</a></li>
+<li><a href="http://memo.dogmap.jp/" rel="me">メモとか</a></li>
+<li><a href="http://takahashifumiki.com/" target="_blank">高橋文樹.com</a></li>
+
+	</ul>
+</aside>
+<aside id="linkcat-1924" class="widget widget_links"><h3 class="widget-title">色々</h3>
+	<ul class='xoxo blogroll'>
+<li><a href="http://blog.gaspanik.com/">gaspanik weblog</a></li>
+<li><a href="http://bloggingfrom.tv/wp/">カイ士伝</a></li>
+<li><a href="http://www.msng.info/" target="_blank">頭ん中</a></li>
+
+	</ul>
+</aside>
+<aside id="text-6" class="widget widget_text"><h3 class="widget-title">Facebook</h3>			<div class="textwidget"><script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like-box href="http://www.facebook.com/dogmap.jp" width="230" show_faces="true" stream="false" header="false"></fb:like-box></div>
+		</aside><aside id="text-8" class="widget widget_text"><h3 class="widget-title">Sponsored</h3>			<div class="textwidget"><p><a href="http://ja.megumi-cloud.com/" title="AWS + Nginx + WordPress - 超高速 WordPress AMI 網元"><img src="/wp-content/uploads/2013/11/amimoto_ami.png" alt="" width="165" height="171" class="alignnone size-full wp-image-2999" title="amimoto_ami" border="0" /></a></p>
+
+<!----
+<p><a href="http://www.amazon.co.jp/?tag=dogmatismandp-22&amp;camp=295&amp;creative=1395&amp;linkCode=ur1&amp;adid=0XBT7372P1TYPQT0NRWN&amp;"><img src="/wp-content/themes/dogmap2/images/remote-buy-jp8.gif" alt="Amazon.co.jp アソシエイト" style="border:none;width:109px;height:28px" /></a><br /></p>
+---></div>
+		</aside><aside id="meta-4" class="widget widget_meta"><h3 class="widget-title">メタ情報</h3>			<ul>
+						<li><a href="/wp-login.php">ログイン</a></li>
+			<li><a href="/feed/">投稿の <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="/comments/feed/">コメントの <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+<li><a href="https://ja.wordpress.org/" title="Powered by WordPress, state-of-the-art semantic personal publishing platform.">WordPress.org</a></li>			</ul>
+</aside>		</div><!-- #secondary -->
+		</div><!-- #main .wrapper -->
+	<footer id="colophon" role="contentinfo">
+		<div class="site-info">
+						<a href="http://ja.wordpress.org/" title="セマンティックなパブリッシングツール">Proudly powered by WordPress</a>
+		</div><!-- .site-info -->
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<script type="text/javascript" src="http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201510"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/569cc0c8a6c5f1b339a5fb07544c7ffa.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/7fd8845b6dacb89dafb8158ebfb8e6ab.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/acbbbeebab3b39986f6c3594773183ac.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/bc893683aded5a4d81ecee54dea3ee57.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/40c54bf6d97959dcb95b079bfac8f473.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/7593ef1a3b061473d5f7bb87b7dd8c20.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/153c3e55fc939f9c5f7c8489a89cd558.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/3d1fe2aef8fc5ad2f2c4cd41cf431dd5.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/88f16e168a12d734514f0039e71c0407.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/bd153df1a7ad999e1e056afd97ba849b.js"></script>
+<script type="text/javascript" src="/wp-content/cache/head-cleaner/js/1ce3453b22f6d9a10a5ba911f54e232a.js"></script>
+
+	<script src="http://stats.wp.com/e-201510.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	st_go({v:'ext',j:'1:3.3.2',blog:'21157279',post:'2496',tz:'9'});
+	var load_cmc = function(){linktracker_init(21157279,2496,2);};
+	if ( typeof addLoadEvent != 'undefined' ) addLoadEvent(load_cmc);
+	else load_cmc();
+	</script></body>
+</html>
